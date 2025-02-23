@@ -3,7 +3,7 @@
 #include <cstdint>
 #include <cmath>
 
-Color::Color(double red, double green, double blue): red(red), green(green), blue(blue) {};
+Color::Color(float red, float green, float blue): red(red), green(green), blue(blue) {};
 
 std::ostream& operator<<(std::ostream& os, const Color& color) {
     uint8_t r = static_cast<uint8_t>(std::round(color.red * 255.0));

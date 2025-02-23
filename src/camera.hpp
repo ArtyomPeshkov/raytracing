@@ -11,11 +11,11 @@ public:
     Vec3f up;
     Vec3f forward;
 
-    double fov_x;
+    float fov_x;
 
-    double tan_fov_x;
-    double tan_fov_y;
+    float tan_fov_x;
+    float tan_fov_y;
 
-    void setupFov(double fov_x, double width, double height);
-    Ray createRay(double x, double y, double width, double height);
+    void setupFov(float fov_x, float width, float height);
+    Ray createRay(float x, float y, float width, float height);
 };

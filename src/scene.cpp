@@ -2,7 +2,7 @@
 
 Color Scene::raytrace(const Ray& ray) {
     Color resColor = bgColor;
-    double resDist = -1.0;
+    float resDist = -1.0;
     for (auto &primitive : primitives) {
         auto intersection = primitive->getIntersection(ray);
         if (!intersection.has_value()) {

@@ -1,7 +1,7 @@
 #include "quaternion.hpp"
 
-Quaternion::Quaternion(double x, double y, double z, double w): v({x, y, z}), w(w) {};
-Quaternion::Quaternion(Vec3f v, double w): v(v), w(w) {};
+Quaternion::Quaternion(float x, float y, float z, float w): v({x, y, z}), w(w) {};
+Quaternion::Quaternion(Vec3f v, float w): v(v), w(w) {};
 
 Quaternion Quaternion::operator* (const Quaternion &other) const {
     return {other.v * w + v * other.w + (v.cross(other.v)), w * other.w - v * other.v};
