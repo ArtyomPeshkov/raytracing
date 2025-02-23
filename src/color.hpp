@@ -4,7 +4,7 @@
 
 class Color {
 public:
-    Color(double red = 0, double green = 0, double blue = 0);
+    Color(double red = 0.0, double green = 0.0, double blue = 0.0);
 
     double red;
     double green;

@@ -3,7 +3,7 @@
 
 class Vec3f {
 public:
-    Vec3f(double x = 0, double y = 0, double z = 0);
+    Vec3f(double x = 0.0, double y = 0.0, double z = 0.0);
 
     double x;
     double y;

@@ -17,8 +17,8 @@ std::optional<std::pair<double, Color>> Primitive::getIntersection(const Ray &ra
 
 std::optional<double> Ellipsoid::intersection(const Ray &ray) const {
     double a = (ray.d / radius) * (ray.d / radius);
-    double b = (ray.o / radius) * (ray.d / radius) * 2;
-    double c = (ray.o / radius) * (ray.o / radius) - 1;
+    double b = (ray.o / radius) * (ray.d / radius) * 2.0;
+    double c = (ray.o / radius) * (ray.o / radius) - 1.0;
     return getCorrectRoot(solveEq(a, b, c));
 }
 
@@ -34,9 +34,9 @@ std::optional<double> Box::intersection(const Ray &ray) const {
     double root1 = std::max(std::max(std::min(t1.x, t2.x), std::min(t1.y, t2.y)), std::min(t1.z, t2.z));
     double root2 = std::min(std::min(std::max(t1.x, t2.x), std::max(t1.y, t2.y)), std::max(t1.z, t2.z));
 
-    if (root1 > root2 || root2 < 0) {
+    if (root1 > root2 || root2 < 0.0) {
         return {};
-    } else if (root1 < 0) {
+    } else if (root1 < 0.0) {
         return root2;
     }
     return root1;

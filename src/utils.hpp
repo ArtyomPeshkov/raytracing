@@ -5,7 +5,7 @@
 
 std::pair<double, double> solveEq(double a, double b, double c) {
     double d = b * b - 4 * a * c;
-    if (d <= 0) {
+    if (d <= 0.0) {
         return {};
     }
 
@@ -15,9 +15,9 @@ std::pair<double, double> solveEq(double a, double b, double c) {
 }
 
 std::optional<double> getCorrectRoot(std::pair<double, double> roots) {
-    double ans = std::min(std::max(0., roots.first), std::max(0., roots.second));
+    double ans = std::min(std::max(0.0, roots.first), std::max(0.0, roots.second));
     // TODO: check
-    if (ans > 0) {
+    if (ans > 0.0) {
         return ans;
     }
     return {};

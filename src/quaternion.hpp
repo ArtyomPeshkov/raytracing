@@ -4,7 +4,7 @@
 
 class Quaternion {
 public:
-    Quaternion(double x = 0, double y = 0, double z = 0, double w = 1);
+    Quaternion(double x = 0.0, double y = 0.0, double z = 0.0, double w = 1.0);
     Quaternion(Vec3f v, double w);
 
     Vec3f v;
