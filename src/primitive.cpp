@@ -23,13 +23,13 @@ std::optional<double> Ellipsoid::intersection(const Ray &ray) const {
 }
 
 std::optional<double> Plane::intersection(const Ray &ray) const {
-    double t = -1 * (ray.o * normal) / (ray.d * normal);
+    double t = -1.0 * (ray.o * normal) / (ray.d * normal);
     return {getCorrectRoot({t, t})};
 }
 
 std::optional<double> Box::intersection(const Ray &ray) const {
     Vec3f t1 = (size - ray.o) / ray.d;
-    Vec3f t2 = (size * (-1) - ray.o) / ray.d;
+    Vec3f t2 = (size * (-1.0) - ray.o) / ray.d;
 
     double root1 = std::max(std::max(std::min(t1.x, t2.x), std::min(t1.y, t2.y)), std::min(t1.z, t2.z));
     double root2 = std::min(std::min(std::max(t1.x, t2.x), std::max(t1.y, t2.y)), std::max(t1.z, t2.z));

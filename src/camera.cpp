@@ -12,7 +12,7 @@ void Camera::setupFov(double fov, double width, double height) {
 
 Ray Camera::createRay(double p_x, double p_y, double width, double height) {
     double x = (2 * (p_x + 0.5) / width - 1) * tan_fov_x;
-    double y = -1 * (2 * (p_y + 0.5) / height - 1) * tan_fov_y;
+    double y = -1.0 * (2 * (p_y + 0.5) / height - 1) * tan_fov_y;
 
     return {position, right * x + up * y + forward};
 }

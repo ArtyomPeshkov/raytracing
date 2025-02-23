@@ -8,5 +8,5 @@ Quaternion Quaternion::operator* (const Quaternion &other) const {
 }
 
 Vec3f Quaternion::rotate(const Vec3f &p) const {
-    return (Quaternion(v, w) * Quaternion(p.x, p.y, p.z, 0.) * Quaternion(v * -1, w)).v;
+    return (Quaternion(v, w) * Quaternion(p.x, p.y, p.z, 0.) * Quaternion(v * -1.0, w)).v;
 }
