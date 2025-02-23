@@ -15,10 +15,20 @@ std::pair<float, float> solveEq(float a, float b, float c) {
 }
 
 std::optional<float> getCorrectRoot(std::pair<float, float> roots) {
-    float ans = std::min(std::max(0.f, roots.first), std::max(0.f, roots.second));
-    // TODO: check
-    if (ans > 0) {
-        return ans;
+    // float ans = std::min(std::max(0.f, roots.first), std::max(0.f, roots.second));
+    // // TODO: check
+    // if (ans > 0) {
+    //     return ans;
+    // }
+    // return {};
+
+    float ans_min = std::min(roots.first, roots.second);
+    float ans_max = std::max(roots.first, roots.second);
+
+    if (ans_max < 0) {
+        return {};
+    } else if (ans_min < 0) {
+        return ans_max;
     }
-    return {};
+    return ans_min;
 }
