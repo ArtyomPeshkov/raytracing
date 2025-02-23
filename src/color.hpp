@@ -4,11 +4,11 @@
 
 class Color {
 public:
-    Color(float red = 0, float green = 0, float blue = 0);
+    Color(double red = 0, double green = 0, double blue = 0);
 
-    float red;
-    float green;
-    float blue;
+    double red;
+    double green;
+    double blue;
 
     friend std::ostream& operator<<(std::ostream& os, const Color& color);
 };

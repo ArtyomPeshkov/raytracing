@@ -14,8 +14,8 @@ public:
     Quaternion rotation = Quaternion();
     Color color = Color();
 
-    std::optional<std::pair<float, Color>> getIntersection(const Ray &ray);
-    virtual std::optional<float> intersection(const Ray &ray) const {};
+    std::optional<std::pair<double, Color>> getIntersection(const Ray &ray);
+    virtual std::optional<double> intersection(const Ray &ray) const {};
 };
 
 class Ellipsoid : public Primitive {
@@ -24,7 +24,7 @@ public:
 
     Vec3f radius;
 
-    std::optional<float> intersection(const Ray &ray) const override;
+    std::optional<double> intersection(const Ray &ray) const override;
 };
 
 class Plane : public Primitive {
@@ -33,7 +33,7 @@ public:
 
     Vec3f normal;
 
-    std::optional<float> intersection(const Ray &ray) const override;
+    std::optional<double> intersection(const Ray &ray) const override;
 };
 
 class Box : public Primitive {
@@ -42,6 +42,6 @@ public:
     
     Vec3f size;
 
-    std::optional<float> intersection(const Ray &ray) const override;
+    std::optional<double> intersection(const Ray &ray) const override;
     
 };

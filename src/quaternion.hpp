@@ -4,11 +4,11 @@
 
 class Quaternion {
 public:
-    Quaternion(float x = 0, float y = 0, float z = 0, float w = 1);
-    Quaternion(Vec3f v, float w);
+    Quaternion(double x = 0, double y = 0, double z = 0, double w = 1);
+    Quaternion(Vec3f v, double w);
 
     Vec3f v;
-    float w;
+    double w;
 
     Quaternion operator* (const Quaternion &other) const;
     Vec3f rotate(const Vec3f &p) const;
