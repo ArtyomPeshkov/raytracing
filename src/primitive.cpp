@@ -44,6 +44,14 @@ std::optional <Intersection> Plane::intersect(const Ray &ray) const {
 
 }
 
+float sign(float val) {
+    if (val < 0.0) {
+        return -1.0;
+    } else {
+        return 1.0;
+    }
+}
+
 std::optional<Intersection> Box::intersect(const Ray& ray) const {
     Vec3f t1 = (size - ray.o) / ray.d;
     Vec3f t2 = (-1.0 * size - ray.o) / ray.d;
@@ -60,9 +68,9 @@ std::optional<Intersection> Box::intersect(const Ray& ray) const {
     Vec3f inter_normal = (is_in ? -1.0 : 1.0) * (ray.o + t * ray.d) / size;
 
     float mx = std::max(std::max(std::abs(inter_normal.x), std::abs(inter_normal.y)), std::abs(inter_normal.z));
-    inter_normal.x = (std::abs(inter_normal.x) == mx) ? inter_normal.x : 0.0;
-    inter_normal.y = (std::abs(inter_normal.y) == mx) ? inter_normal.y : 0.0;
-    inter_normal.z = (std::abs(inter_normal.z) == mx) ? inter_normal.z : 0.0;
+    inter_normal.x = (std::abs(inter_normal.x) == mx) ? sign(inter_normal.x) : 0.0;
+    inter_normal.y = (std::abs(inter_normal.y) == mx) ? sign(inter_normal.y) : 0.0;
+    inter_normal.z = (std::abs(inter_normal.z) == mx) ? sign(inter_normal.z) : 0.0;
 
     return Intersection(t, is_in, inter_normal, color);
 }
