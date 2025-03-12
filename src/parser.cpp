@@ -49,6 +49,12 @@ std::string Parser::parsePrimitive(std::ifstream &input, std::vector<Primitive*>
             float x, y, z, w;
             iss >> x >> y >> z >> w;
             primitive->rotation = {x, y, z, w};
+        } else if (property == "METALLIC") {
+            primitive->material = Material::METALLIC;
+        } else if (property == "DIELECTRIC") {
+            primitive->material = Material::DIELECTRIC;
+        } else if (property == "IOR") {
+            iss >> primitive->ior;
         } else {
             primitives.push_back(primitive);
             return line;
@@ -56,6 +62,44 @@ std::string Parser::parsePrimitive(std::ifstream &input, std::vector<Primitive*>
     }
 
     primitives.push_back(primitive);
+    return "";
+}
+
+std::string Parser::parseLight(std::ifstream &input, std::vector<Light*> &lights) {
+    Light* res = new Light();
+    
+    res->type = LightType::Dot;
+
+    std::string line;
+    while (std::getline(input, line)) {
+        std::string property;
+        std::istringstream iss(line);
+        iss >> property;
+
+        if (property == "LIGHT_INTENSITY") {
+            float r, g, b;
+            iss >> r >> g >> b;
+            res->intensity = {r, g, b};
+        } else if (property == "LIGHT_POSITION") {
+            float x, y, z;
+            iss >> x >> y >> z;
+            res->position = {x, y, z};
+        } else if (property == "LIGHT_DIRECTION") {
+            float x, y, z;
+            iss >> x >> y >> z;
+            res->direction = {x, y, z};
+            res->type = LightType::Direction;
+        } else if (property == "LIGHT_ATTENUATION") {
+            float x, y, z;
+            iss >> x >> y >> z;
+            res->attenuation = {x, y, z};
+        } else {
+            lights.push_back(res);
+            return line;
+        }
+    }
+
+    lights.push_back(res);
     return "";
 }
 
@@ -101,8 +145,17 @@ Scene Parser::parseScene(const std::string &filename) {
             float fov_x;
             iss >> fov_x;
             scene.camera.setupFov(fov_x, scene.width, scene.height);
+        } else if (property == "RAY_DEPTH") {
+            iss >> scene.rayDepth;
+        } else if (property == "AMBIENT_LIGHT") {
+            float r, g, b;
+            iss >> r >> g >> b;
+            scene.ambient = {r, g, b};
         } else if (property == "NEW_PRIMITIVE") {
             line = parsePrimitive(file, scene.primitives);
+            continue;
+        } else if (property == "NEW_LIGHT") {
+            line = parseLight(file, scene.lights);
             continue;
         } else {
             std::cout << "Ignored line: " << line << std::endl;

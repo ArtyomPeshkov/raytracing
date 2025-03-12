@@ -1,47 +1,66 @@
 #pragma once
 
+#include <optional>
 #include "coordinate.hpp"
-#include "quaternion.hpp"
 #include "color.hpp"
+#include "quaternion.hpp"
 #include "ray.hpp"
 
-#include <optional>
+enum class Material {
+    DIFFUSE, METALLIC, DIELECTRIC
+};
+
+struct Intersection {
+    Intersection(float t = 0, bool is_in = false, Vec3f normal = Vec3f(0, 0, 0), Color color = Color(0, 0, 0), int index = -1): t(t), normal(normal), color(color), is_in(is_in), primitiveIndex(index) {};
+
+    Vec3f normal;
+    bool is_in;
+    float t;
+    Color color;
+    int primitiveIndex;
+};
 
 class Primitive {
 public:
-    // TODO: use std::variant<plane, box, ellipse> instead and std::visit for intersect
-    Vec3f position = Vec3f();
-    Quaternion rotation = Quaternion();
-    Color color = Color();
+    Vec3f position{};
+    Quaternion rotation = {0, 0, 0, 1};
+    Color color;
 
-    std::optional<std::pair<float, Color>> getIntersection(const Ray &ray);
-    virtual std::optional<float> intersection(const Ray &ray) const {};
-};
+    Material material = Material::DIFFUSE;
+    float ior;
 
-class Ellipsoid : public Primitive {
-public:
-    Ellipsoid(Vec3f r);
+    Primitive() = default;
 
-    Vec3f radius;
-
-    std::optional<float> intersection(const Ray &ray) const override;
+    std::optional <Intersection> intersection(const Ray &ray);
+    virtual std::optional <Intersection> intersect(const Ray &ray) const = 0;
 };
 
 class Plane : public Primitive {
 public:
+    Vec3f normal{};
+
     Plane(Vec3f n);
+    Plane() = default;
 
-    Vec3f normal;
+    std::optional <Intersection> intersect(const Ray &ray) const override;
+};
 
-    std::optional<float> intersection(const Ray &ray) const override;
+class Ellipsoid : public Primitive {
+public:
+    Vec3f radius{};
+
+    Ellipsoid(Vec3f r);
+    Ellipsoid() = default;
+
+    std::optional <Intersection> intersect(const Ray &ray) const override;
 };
 
 class Box : public Primitive {
 public:
-    Box(Vec3f s);
-    
-    Vec3f size;
+    Vec3f size{};
 
-    std::optional<float> intersection(const Ray &ray) const override;
-    
+    Box(Vec3f s);
+    Box() = default;
+
+    std::optional <Intersection> intersect(const Ray &ray) const override;
 };

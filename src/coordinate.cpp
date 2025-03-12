@@ -1,5 +1,7 @@
 #include "coordinate.hpp"
 
+#include <cmath>
+
 Vec3f::Vec3f(float x, float y, float z) : x(x), y(y), z(z) {}
 
 Vec3f Vec3f::operator+(const Vec3f& other) const {
@@ -10,7 +12,7 @@ Vec3f Vec3f::operator-(const Vec3f& other) const {
     return Vec3f(x - other.x, y - other.y, z - other.z);
 }
 
-float Vec3f::operator* (const Vec3f &other) const {
+float Vec3f::operator*(const Vec3f &other) const {
     return x * other.x + y * other.y + z * other.z;
 }
 
@@ -22,6 +24,14 @@ Vec3f Vec3f::operator/ (const Vec3f &other) const {
     return {x / other.x, y / other.y, z / other.z};
 }
 
-Vec3f Vec3f::operator*(float value) const {
-    return Vec3f(x * value, y * value, z * value);
+Vec3f Vec3f::normalized() const {
+    return (1. / sqrt(self_dot())) * (*this);
+}
+
+Vec3f operator* (float value, const Vec3f &vec) {
+    return {value * vec.x, value * vec.y, value * vec.z};
+}
+
+float Vec3f::self_dot() const {
+    return (*this) * (*this);
 }

@@ -1,6 +1,7 @@
 #pragma once
 
-#include <fstream>
+#include <iostream>
+#include <cstdint>
 
 class Color {
 public:
@@ -10,5 +11,14 @@ public:
     float green;
     float blue;
 
-    friend std::ostream& operator<<(std::ostream& os, const Color& color);
+    static float gamma_correction(const float &component);
+    static float saturation(const float &component);
+    Color tonemap() const;
+
+    friend Color operator*(const Color& lhs, const Color& rhs);
+    friend Color operator*(float scalar, const Color& color);
+    friend Color operator+(const Color& color, float scalar);
+    friend Color operator+(const Color& lhs, const Color& rhs);
+    friend Color operator/(const Color& lhs, const Color& rhs);
+    friend std::ostream& operator<<(std::ostream& os, Color color);
 };

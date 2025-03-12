@@ -1,9 +1,11 @@
 #pragma once
 
+#include "primitive.hpp"
+
 #include <optional>
 #include <cmath>
 
-std::pair<float, float> solveEq(float a, float b, float c) {
+std::optional<std::pair<float, float>> solveEq(float a, float b, float c) {
     float d = b * b - 4 * a * c;
     if (d <= 0.0) {
         return {};
@@ -11,14 +13,22 @@ std::pair<float, float> solveEq(float a, float b, float c) {
 
     float x1 = (-b - sqrt(d)) / (2 * a);
     float x2 = (-b + sqrt(d)) / (2 * a);
-    return {x1, x2};
+    return { {x1, x2} };
 }
 
-std::optional<float> getCorrectRoot(std::pair<float, float> roots) {
-    float ans = std::min(std::max(0.f, roots.first), std::max(0.f, roots.second));
-    // TODO: check
-    if (ans > 0.0) {
-        return ans;
+std::optional<Intersection> getCorrectRoot(std::optional<std::pair<float, float>> opt_roots) {
+    if (!opt_roots.has_value()) {
+        return {};
     }
-    return {};
+    
+    std::pair<float, float> roots = opt_roots.value();
+    float x1 = std::min(roots.first, roots.second);
+    float x2 = std::max(roots.first, roots.second);
+
+    if (x2 <= 0) {
+        return {};
+    } else if (x1 <= 0) {
+        return Intersection(x2, true);
+    }
+    return Intersection(x1, false);
 }

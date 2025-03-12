@@ -13,6 +13,9 @@ public:
     Vec3f operator-(const Vec3f& other) const;
     float operator*(const Vec3f& other) const;
     Vec3f cross(const Vec3f& other) const;
+    Vec3f normalized() const;
     Vec3f operator/(const Vec3f& other) const;
-    Vec3f operator*(float value) const;
+    float self_dot() const;
 };
+
+Vec3f operator* (float k, const Vec3f &p);
