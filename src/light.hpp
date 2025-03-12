@@ -12,7 +12,7 @@ enum LightType {
 struct LightResult {
     Vec3f point{};
     Color color{};
-    float r{};
+    double r{};
 };
 
 class Light {

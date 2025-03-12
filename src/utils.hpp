@@ -5,25 +5,25 @@
 #include <optional>
 #include <cmath>
 
-std::optional<std::pair<float, float>> solveEq(float a, float b, float c) {
-    float d = b * b - 4 * a * c;
+std::optional<std::pair<double, double>> solveEq(double a, double b, double c) {
+    double d = b * b - 4 * a * c;
     if (d <= 0.0) {
         return {};
     }
 
-    float x1 = (-b - sqrt(d)) / (2 * a);
-    float x2 = (-b + sqrt(d)) / (2 * a);
+    double x1 = (-b - sqrt(d)) / (2 * a);
+    double x2 = (-b + sqrt(d)) / (2 * a);
     return { {x1, x2} };
 }
 
-std::optional<Intersection> getCorrectRoot(std::optional<std::pair<float, float>> opt_roots) {
+std::optional<Intersection> getCorrectRoot(std::optional<std::pair<double, double>> opt_roots) {
     if (!opt_roots.has_value()) {
         return {};
     }
     
-    std::pair<float, float> roots = opt_roots.value();
-    float x1 = std::min(roots.first, roots.second);
-    float x2 = std::max(roots.first, roots.second);
+    std::pair<double, double> roots = opt_roots.value();
+    double x1 = std::min(roots.first, roots.second);
+    double x2 = std::max(roots.first, roots.second);
 
     if (x2 <= 0) {
         return {};
