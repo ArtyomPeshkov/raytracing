@@ -10,7 +10,7 @@ float Color::gamma_correction(const float &component) {
 }
 
 float Color::saturation(const float &component) {
-    return std::min(1., std::max(0., component));
+    return std::min(1.f, std::max(0.f, component));
 }
 
 Color Color::tonemap() const {
