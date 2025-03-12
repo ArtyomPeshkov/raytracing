@@ -3,15 +3,15 @@
 
 #include <cmath>
 
-void Camera::setupFov(float fov, float width, float height) {
+void Camera::setupFov(double fov, double width, double height) {
     fov_x = fov;
     tan_fov_x = tan(fov_x / 2);
     tan_fov_y = tan_fov_x * height / width;
 }
 
 
-Ray Camera::createRay(float p_x, float p_y, float width, float height) {
-    float x = (2.0 * (p_x + 0.5) / width - 1.0) * tan_fov_x;
-    float y = -1.0 * (2.0 * (p_y + 0.5) / height - 1.0) * tan_fov_y;
+Ray Camera::createRay(double p_x, double p_y, double width, double height) {
+    double x = (2.0 * (p_x + 0.5) / width - 1.0) * tan_fov_x;
+    double y = -1.0 * (2.0 * (p_y + 0.5) / height - 1.0) * tan_fov_y;
     return {position, x * right + y * up + forward};
 }
