@@ -37,7 +37,7 @@ Color Scene::raytrace(Ray ray, int bounceNum) const {
 
             auto [l, color, limit] = lightSource->getLight(ray_point);
             float reflected = l * normal;
-            if (reflected >= 0 && getIntersection(Ray(ray_point + 0.0001 * normal, l), limit).primitiveIndex == -1) {
+            if (reflected >= 0 && getIntersection(Ray(ray_point + 0.0001 * l, l), limit).primitiveIndex == -1) {
                 default_color = default_color + reflected * color;
             }
         }
