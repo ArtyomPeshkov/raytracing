@@ -19,7 +19,7 @@ Intersection Scene::getIntersection(Ray ray, double limit) const {
 
 Color Scene::raytrace(Ray ray, int bounceNum) const {
     if (bounceNum == 0) {
-        return bgColor;
+        return {0.0, 0.0, 0.0};
     }
 
     auto intersection = getIntersection(ray,  1e9);
