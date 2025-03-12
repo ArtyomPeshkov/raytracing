@@ -44,11 +44,11 @@ Color Scene::raytrace(Ray ray, int bounceNum) const {
         return default_color * inter_color;
     } else if (primitive->material == Material::METALLIC) {
         Vec3f reflectedDir = ray.d.normalized() - 2.0 * normal * ray.d.normalized() * normal;
-        Ray reflectedRay = Ray(ray.o + t * ray.d + 0.0001 * normal, reflectedDir);
+        Ray reflectedRay = Ray(ray.o + t * ray.d + 0.0001 * reflectedDir, reflectedDir);
         return inter_color * raytrace(reflectedRay, bounceNum - 1);
     } else {
         Vec3f reflectedDir = ray.d.normalized() - 2.0 * normal * ray.d.normalized() * normal;
-        Ray reflectedRay = Ray(ray.o + t * ray.d + 0.0001 * normal, reflectedDir);
+        Ray reflectedRay = Ray(ray.o + t * ray.d + 0.0001 * reflectedDir, reflectedDir);
         Color reflectedColor = raytrace(reflectedRay, bounceNum - 1);
 
         float eta1 = (is_in ? primitive->ior : 1.0);
@@ -63,7 +63,7 @@ Color Scene::raytrace(Ray ray, int bounceNum) const {
 
         float cosTheta2 = sqrt(1 - sinTheta2 * sinTheta2);
         Vec3f refractedDir = (eta1 / eta2) * (-1.0 * l) + (eta1 / eta2 * normal * l - cosTheta2) * normal;
-        Ray refracted = Ray(ray.o + t * ray.d + 0.0001 * normal, refractedDir);
+        Ray refracted = Ray(ray.o + t * ray.d + 0.0001 * refractedDir, refractedDir);
         Color refractedColor = raytrace(refracted, bounceNum - 1);
         if (!is_in) {
             refractedColor = refractedColor * inter_color;
