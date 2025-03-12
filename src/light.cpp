@@ -8,7 +8,7 @@ LightResult Light::getLight(Vec3f point) const {
         Color resulting = 1.0 / (attenuation.x + attenuation.y * length + attenuation.z * length * length) * intensity;
         return LightResult{direction.normalized(), resulting, length};
     } else if (type == LightType::Direction) {
-        return LightResult{direction.normalized(), intensity, 1. / 0.0001};
+        return LightResult{direction.normalized(), intensity, 1. / 0.001};
     } else {
         // std::cout << "Unexpected"
     }
