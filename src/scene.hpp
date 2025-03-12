@@ -27,5 +27,5 @@ public:
 
     void render(std::ostream &out) const;
     Color raytrace(Ray ray, int bounceNum) const;
-    Intersection getIntersection(Ray ray, double lower_bound) const;
+    Intersection getIntersection(Ray ray, float lower_bound) const;
 };

@@ -15,15 +15,15 @@ std::string Parser::parsePrimitive(std::ifstream &input, std::vector<Primitive*>
     iss >> primitiveType;
 
     if (primitiveType == "ELLIPSOID") {
-        double r_x, r_y, r_z;
+        float r_x, r_y, r_z;
         iss >> r_x >> r_y >> r_z;
         primitive = new Ellipsoid({r_x, r_y, r_z});
     } else if (primitiveType == "PLANE") {
-        double n_x, n_y, n_z;
+        float n_x, n_y, n_z;
         iss >> n_x >> n_y >> n_z;
         primitive = new Plane({n_x, n_y, n_z});
     } else if (primitiveType == "BOX") {
-        double e_x, e_y, e_z;
+        float e_x, e_y, e_z;
         iss >> e_x >> e_y >> e_z;
         primitive = new Box({e_x, e_y, e_z});
     } else {
@@ -38,15 +38,15 @@ std::string Parser::parsePrimitive(std::ifstream &input, std::vector<Primitive*>
         iss >> property;
 
         if (property == "COLOR") {
-            double r, g, b;
+            float r, g, b;
             iss >> r >> g >> b;
             primitive->color = {r, g, b};
         } else if (property == "POSITION") {
-            double x, y, z;
+            float x, y, z;
             iss >> x >> y >> z;
             primitive->position = {x, y, z};
         } else if (property == "ROTATION") {
-            double x, y, z, w;
+            float x, y, z, w;
             iss >> x >> y >> z >> w;
             primitive->rotation = {x, y, z, w};
         } else if (property == "METALLIC") {
@@ -77,20 +77,20 @@ std::string Parser::parseLight(std::ifstream &input, std::vector<Light*> &lights
         iss >> property;
 
         if (property == "LIGHT_INTENSITY") {
-            double r, g, b;
+            float r, g, b;
             iss >> r >> g >> b;
             res->intensity = {r, g, b};
         } else if (property == "LIGHT_POSITION") {
-            double x, y, z;
+            float x, y, z;
             iss >> x >> y >> z;
             res->position = {x, y, z};
         } else if (property == "LIGHT_DIRECTION") {
-            double x, y, z;
+            float x, y, z;
             iss >> x >> y >> z;
             res->direction = {x, y, z};
             res->type = LightType::Direction;
         } else if (property == "LIGHT_ATTENUATION") {
-            double x, y, z;
+            float x, y, z;
             iss >> x >> y >> z;
             res->attenuation = {x, y, z};
         } else {
@@ -122,33 +122,33 @@ Scene Parser::parseScene(const std::string &filename) {
         if (property == "DIMENSIONS") {
             iss >> scene.width >> scene.height;
         } else if (property == "BG_COLOR") {
-            double r, g, b;
+            float r, g, b;
             iss >> r >> g >> b;
             scene.bgColor = {r, g, b};
         } else if (property == "CAMERA_POSITION") {
-            double x, y, z;
+            float x, y, z;
             iss >> x >> y >> z;
             scene.camera.position = {x, y, z};
         } else if (property == "CAMERA_RIGHT") {
-            double x, y, z;
+            float x, y, z;
             iss >> x >> y >> z;
             scene.camera.right = {x, y, z};
         } else if (property == "CAMERA_UP") {
-            double x, y, z;
+            float x, y, z;
             iss >> x >> y >> z;
             scene.camera.up = {x, y, z};
         } else if (property == "CAMERA_FORWARD") {
-            double x, y, z;
+            float x, y, z;
             iss >> x >> y >> z;
             scene.camera.forward = {x, y, z};
         } else if (property == "CAMERA_FOV_X") {
-            double fov_x;
+            float fov_x;
             iss >> fov_x;
             scene.camera.setupFov(fov_x, scene.width, scene.height);
         } else if (property == "RAY_DEPTH") {
             iss >> scene.rayDepth;
         } else if (property == "AMBIENT_LIGHT") {
-            double r, g, b;
+            float r, g, b;
             iss >> r >> g >> b;
             scene.ambient = {r, g, b};
         } else if (property == "NEW_PRIMITIVE") {

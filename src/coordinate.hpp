@@ -3,19 +3,19 @@
 
 class Vec3f {
 public:
-    Vec3f(double x = 0.0, double y = 0.0, double z = 0.0);
+    Vec3f(float x = 0.0, float y = 0.0, float z = 0.0);
 
-    double x;
-    double y;
-    double z;
+    float x;
+    float y;
+    float z;
 
     Vec3f operator+(const Vec3f& other) const;
     Vec3f operator-(const Vec3f& other) const;
-    double operator*(const Vec3f& other) const;
+    float operator*(const Vec3f& other) const;
     Vec3f cross(const Vec3f& other) const;
     Vec3f normalized() const;
     Vec3f operator/(const Vec3f& other) const;
-    double self_dot() const;
+    float self_dot() const;
 };
 
-Vec3f operator* (double k, const Vec3f &p);
+Vec3f operator* (float k, const Vec3f &p);

@@ -5,19 +5,19 @@
 
 class Color {
 public:
-    Color(double red = 0.0, double green = 0.0, double blue = 0.0);
+    Color(float red = 0.0, float green = 0.0, float blue = 0.0);
 
-    double red;
-    double green;
-    double blue;
+    float red;
+    float green;
+    float blue;
 
-    static double gamma_correction(const double &component);
-    static double saturation(const double &component);
+    static float gamma_correction(const float &component);
+    static float saturation(const float &component);
     Color tonemap() const;
 
     friend Color operator*(const Color& lhs, const Color& rhs);
-    friend Color operator*(double scalar, const Color& color);
-    friend Color operator+(const Color& color, double scalar);
+    friend Color operator*(float scalar, const Color& color);
+    friend Color operator+(const Color& color, float scalar);
     friend Color operator+(const Color& lhs, const Color& rhs);
     friend Color operator/(const Color& lhs, const Color& rhs);
     friend std::ostream& operator<<(std::ostream& os, Color color);

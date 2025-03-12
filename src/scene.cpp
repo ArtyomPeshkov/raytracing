@@ -4,7 +4,7 @@
 #include <sstream>
 #include <cmath>
 
-Intersection Scene::getIntersection(Ray ray, double limit) const {
+Intersection Scene::getIntersection(Ray ray, float limit) const {
     Intersection result;
     result.color = bgColor;
     for (int i = 0; i < primitives.size(); i++) {
@@ -36,7 +36,7 @@ Color Scene::raytrace(Ray ray, int bounceNum) const {
             Vec3f ray_point = ray.o + t * ray.d;
 
             auto [l, color, limit] = lightSource->getLight(ray_point);
-            double reflected = l * normal;
+            float reflected = l * normal;
             if (reflected >= 0 && getIntersection(Ray(ray_point + 0.0001 * l, l), limit).primitiveIndex == -1) {
                 default_color = default_color + reflected * color;
             }
@@ -51,17 +51,17 @@ Color Scene::raytrace(Ray ray, int bounceNum) const {
         Ray reflectedRay = Ray(ray.o + t * ray.d + 0.0001 * reflectedDir, reflectedDir);
         Color reflectedColor = raytrace(reflectedRay, bounceNum - 1);
 
-        double eta1 = (is_in ? primitive->ior : 1.0);
-        double eta2 = (is_in ? 1.0 : primitive->ior);
+        float eta1 = (is_in ? primitive->ior : 1.0);
+        float eta2 = (is_in ? 1.0 : primitive->ior);
 
         Vec3f l = -1.0 * ray.d.normalized();
-        double sinTheta2 = (eta1 / eta2) * sqrt(1 - (normal * l) * (normal * l));
+        float sinTheta2 = (eta1 / eta2) * sqrt(1 - (normal * l) * (normal * l));
 
         if (fabsf(sinTheta2) > 1.0) {
             return reflectedColor;
         }
 
-        double cosTheta2 = sqrt(1 - sinTheta2 * sinTheta2);
+        float cosTheta2 = sqrt(1 - sinTheta2 * sinTheta2);
         Vec3f refractedDir = (eta1 / eta2) * (-1.0 * l) + (eta1 / eta2 * normal * l - cosTheta2) * normal;
         Ray refracted = Ray(ray.o + t * ray.d + 0.0001 * refractedDir, refractedDir);
         Color refractedColor = raytrace(refracted, bounceNum - 1);
@@ -69,8 +69,8 @@ Color Scene::raytrace(Ray ray, int bounceNum) const {
             refractedColor = refractedColor * inter_color;
         }
 
-        double r0 = pow((eta1 - eta2) / (eta1 + eta2), 2.0);
-        double r = r0 + (1 - r0) * pow(1 - normal * l, 5.0);
+        float r0 = pow((eta1 - eta2) / (eta1 + eta2), 2.0);
+        float r = r0 + (1 - r0) * pow(1 - normal * l, 5.0);
         return r * reflectedColor + (1 - r) * refractedColor;
     }
 }
@@ -82,14 +82,14 @@ void Scene::render(std::ostream &out) const {
     for (int y = 0; y < height; y++) {
         for (int x = 0; x < width; x++) {
 
-            double tan_x = std::tan(camera.fov_x / 2);
-            double tan_y = tan_x * double(height) / double(width);
+            float tan_x = std::tan(camera.fov_x / 2);
+            float tan_y = tan_x * float(height) / float(width);
 
-            double cx = 2.0 * (x + 0.5) / width - 1.0;
-            double cy = 2.0 * (y + 0.5) / height - 1.0;
+            float cx = 2.0 * (x + 0.5) / width - 1.0;
+            float cy = 2.0 * (y + 0.5) / height - 1.0;
 
-            double real_x = tan_x * cx;
-            double real_y = tan_y * cy;
+            float real_x = tan_x * cx;
+            float real_y = tan_y * cy;
 
             Ray real_ray = Ray(camera.position, real_x * camera.right - real_y * camera.up + camera.forward);
 

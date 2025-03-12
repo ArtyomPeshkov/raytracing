@@ -3,22 +3,22 @@
 #include <cmath>
 #include <algorithm>
 
-Color::Color(double red, double green, double blue) : red(red), green(green), blue(blue) {}
+Color::Color(float red, float green, float blue) : red(red), green(green), blue(blue) {}
 
-double Color::gamma_correction(const double &component) {
+float Color::gamma_correction(const float &component) {
     return pow(component, 1. / 2.2);
 }
 
-double Color::saturation(const double &component) {
+float Color::saturation(const float &component) {
     return std::min(1., std::max(0., component));
 }
 
 Color Color::tonemap() const {
-    const double a = 2.51f;
-    const double b = 0.03f;
-    const double c = 2.43f;
-    const double d = 0.59f;
-    const double e = 0.14f;
+    const float a = 2.51f;
+    const float b = 0.03f;
+    const float c = 2.43f;
+    const float d = 0.59f;
+    const float e = 0.14f;
     return ((*this) * (a * (*this) + b)) / ((*this) * (c * (*this) + d) + e);
 }
 
@@ -26,11 +26,11 @@ Color operator*(const Color& lhs, const Color& rhs) {
     return Color(lhs.red * rhs.red, lhs.green * rhs.green, lhs.blue * rhs.blue);
 }
 
-Color operator*(double scalar, const Color& color) {
+Color operator*(float scalar, const Color& color) {
     return Color(color.red * scalar, color.green * scalar, color.blue * scalar);
 }
 
-Color operator+(const Color& color, double scalar) {
+Color operator+(const Color& color, float scalar) {
     return Color(color.red + scalar, color.green + scalar, color.blue + scalar);
 }
 

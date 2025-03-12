@@ -18,9 +18,9 @@ Plane::Plane(Vec3f n): normal(n) {}
 Ellipsoid::Ellipsoid(Vec3f r): radius(r) {}
 
 std::optional<Intersection> Ellipsoid::intersect(const Ray& ray) const {
-    double a = (ray.d / radius) * ((ray.d / radius));
-    double b = (ray.o / radius) * ((ray.d / radius)) * 2.0;
-    double c = (ray.o / radius) * ((ray.o / radius)) - 1.0;
+    float a = (ray.d / radius) * ((ray.d / radius));
+    float b = (ray.o / radius) * ((ray.d / radius)) * 2.0;
+    float c = (ray.o / radius) * ((ray.o / radius)) - 1.0;
 
     auto opt_t = getCorrectRoot(solveEq(a, b, c));
     if (!opt_t.has_value()) {
@@ -34,7 +34,7 @@ std::optional<Intersection> Ellipsoid::intersect(const Ray& ray) const {
 }
 
 std::optional <Intersection> Plane::intersect(const Ray &ray) const {
-    double t = -1.0 * (ray.o * normal) / (ray.d * normal);
+    float t = -1.0 * (ray.o * normal) / (ray.d * normal);
     if (t <= 0) {
         return{};
     }
@@ -48,18 +48,18 @@ std::optional<Intersection> Box::intersect(const Ray& ray) const {
     Vec3f t1 = (size - ray.o) / ray.d;
     Vec3f t2 = (-1.0 * size - ray.o) / ray.d;
 
-    double root1 = std::max(std::max(std::min(t1.x, t2.x), std::min(t1.y, t2.y)), std::min(t1.z, t2.z));
-    double root2 = std::min(std::min(std::max(t1.x, t2.x), std::max(t1.y, t2.y)), std::max(t1.z, t2.z));
+    float root1 = std::max(std::max(std::min(t1.x, t2.x), std::min(t1.y, t2.y)), std::min(t1.z, t2.z));
+    float root2 = std::min(std::min(std::max(t1.x, t2.x), std::max(t1.y, t2.y)), std::max(t1.z, t2.z));
 
     if (root1 > root2 || root2 < 0) {
         return {};
     }
 
-    double t = (root1 < 0) ? root2 : root1;
+    float t = (root1 < 0) ? root2 : root1;
     bool is_in = (root1 < 0);
     Vec3f inter_normal = (is_in ? -1.0 : 1.0) * (ray.o + t * ray.d) / size;
 
-    double mx = std::max(std::max(std::abs(inter_normal.x), std::abs(inter_normal.y)), std::abs(inter_normal.z));
+    float mx = std::max(std::max(std::abs(inter_normal.x), std::abs(inter_normal.y)), std::abs(inter_normal.z));
     inter_normal.x = (std::abs(inter_normal.x) == mx) ? inter_normal.x : 0.0;
     inter_normal.y = (std::abs(inter_normal.y) == mx) ? inter_normal.y : 0.0;
     inter_normal.z = (std::abs(inter_normal.z) == mx) ? inter_normal.z : 0.0;
