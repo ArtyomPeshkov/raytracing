@@ -1,4 +1,5 @@
 #include "scene.hpp"
+#include "randomiser.hpp"
 
 #include <string>
 #include <sstream>
@@ -31,21 +32,19 @@ Color Scene::raytrace(Ray ray, int bounceNum) const {
     auto primitive = primitives[index];
 
     if (primitive->material == Material::DIFFUSE) {
-        Color default_color = ambient;
-        for (const auto &lightSource : lights) {
-            Vec3f ray_point = ray.o + t * ray.d;
-
-            auto [l, color, limit] = lightSource->getLight(ray_point);
-            double reflected = l * normal;
-            if (reflected >= 0 && getIntersection(Ray(ray_point + 0.0001 * l, l), limit).primitiveIndex == -1) {
-                default_color = default_color + reflected * color;
-            }
+        Vec3f w = Vec3f(Random::normal_dist_0_1(Random::rnd), Random::normal_dist_0_1(Random::rnd), Random::normal_dist_0_1(Random::rnd)).normalized();
+        if (w * normal < 0) {
+            w = -1.0 * w;
         }
-        return default_color * inter_color;
+
+        Ray new_ray = Ray(ray.o + t * ray.d + 0.0001 * w, w);
+        auto rec_color = 2 * (w * normal) * primitive->color * raytrace(new_ray, bounceNum - 1);
+        return primitive->emission + rec_color;
     } else if (primitive->material == Material::METALLIC) {
         Vec3f reflectedDir = ray.d.normalized() - 2.0 * normal * ray.d.normalized() * normal;
         Ray reflectedRay = Ray(ray.o + t * ray.d + 0.0001 * reflectedDir, reflectedDir);
-        return inter_color * raytrace(reflectedRay, bounceNum - 1);
+
+        return primitive->emission + inter_color * raytrace(reflectedRay, bounceNum - 1);
     } else {
         Vec3f reflectedDir = ray.d.normalized() - 2.0 * normal * ray.d.normalized() * normal;
         Ray reflectedRay = Ray(ray.o + t * ray.d + 0.0001 * reflectedDir, reflectedDir);
@@ -58,10 +57,16 @@ Color Scene::raytrace(Ray ray, int bounceNum) const {
         double sinTheta2 = (eta1 / eta2) * sqrt(1 - (normal * l) * (normal * l));
 
         if (fabsf(sinTheta2) > 1.0) {
-            return reflectedColor;
+            return primitive->emission + reflectedColor;
         }
 
-        double cosTheta2 = sqrt(1 - sinTheta2 * sinTheta2);
+        double r0 = pow((eta1 - eta2) / (eta1 + eta2), 2.0);
+        double r = r0 + (1 - r0) * pow(1 - normal * l, 5.0);
+        if (Random::uniform_dist_0_1(Random::rnd) < r) {
+            return primitive->emission + reflectedColor;
+        }
+
+        double cosTheta2 = sqrt(1.0 - sinTheta2 * sinTheta2);
         Vec3f refractedDir = (eta1 / eta2) * (-1.0 * l) + (eta1 / eta2 * normal * l - cosTheta2) * normal;
         Ray refracted = Ray(ray.o + t * ray.d + 0.0001 * refractedDir, refractedDir);
         Color refractedColor = raytrace(refracted, bounceNum - 1);
@@ -69,33 +74,6 @@ Color Scene::raytrace(Ray ray, int bounceNum) const {
             refractedColor = refractedColor * inter_color;
         }
 
-        double r0 = pow((eta1 - eta2) / (eta1 + eta2), 2.0);
-        double r = r0 + (1 - r0) * pow(1 - normal * l, 5.0);
-        return r * reflectedColor + (1 - r) * refractedColor;
-    }
-}
-
-void Scene::render(std::ostream &out) const {
-    out << "P6\n";
-    out << width << " " << height << '\n';
-    out << 255 << '\n';
-    for (int y = 0; y < height; y++) {
-        for (int x = 0; x < width; x++) {
-
-            double tan_x = std::tan(camera.fov_x / 2);
-            double tan_y = tan_x * double(height) / double(width);
-
-            double cx = 2.0 * (x + 0.5) / width - 1.0;
-            double cy = 2.0 * (y + 0.5) / height - 1.0;
-
-            double real_x = tan_x * cx;
-            double real_y = tan_y * cy;
-
-            Ray real_ray = Ray(camera.position, real_x * camera.right - real_y * camera.up + camera.forward);
-
-            auto pixel = raytrace(real_ray, rayDepth);
-
-            out << pixel;
-        }
+        return primitive->emission + refractedColor;
     }
 }

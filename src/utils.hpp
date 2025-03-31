@@ -5,6 +5,14 @@
 #include <optional>
 #include <cmath>
 
+double sign(double val) {
+    if (val < 0.0) {
+        return -1.0;
+    } else {
+        return 1.0;
+    }
+}
+
 std::optional<std::pair<double, double>> solveEq(double a, double b, double c) {
     double d = b * b - 4 * a * c;
     if (d <= 0.0) {

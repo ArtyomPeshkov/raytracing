@@ -17,5 +17,5 @@ public:
     double tan_fov_y;
 
     void setupFov(double fov_x, double width, double height);
-    Ray createRay(double x, double y, double width, double height);
+    Ray createRay(double x, double y, double width, double height) const;
 };

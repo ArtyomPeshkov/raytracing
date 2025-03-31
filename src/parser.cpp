@@ -55,6 +55,12 @@ std::string Parser::parsePrimitive(std::ifstream &input, std::vector<Primitive*>
             primitive->material = Material::DIELECTRIC;
         } else if (property == "IOR") {
             iss >> primitive->ior;
+        } else if (property == "EMISSION") {
+            float r, g, b;
+            iss >> r >> g >> b;
+
+            primitive->emission = Color(r, g, b);
+
         } else {
             primitives.push_back(primitive);
             return line;
@@ -151,6 +157,8 @@ Scene Parser::parseScene(const std::string &filename) {
             double r, g, b;
             iss >> r >> g >> b;
             scene.ambient = {r, g, b};
+        } else if (property == "SAMPLES") {
+            iss >> scene.samples;
         } else if (property == "NEW_PRIMITIVE") {
             line = parsePrimitive(file, scene.primitives);
             continue;

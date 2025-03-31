@@ -44,14 +44,6 @@ std::optional <Intersection> Plane::intersect(const Ray &ray) const {
 
 }
 
-double sign(double val) {
-    if (val < 0.0) {
-        return -1.0;
-    } else {
-        return 1.0;
-    }
-}
-
 std::optional<Intersection> Box::intersect(const Ray& ray) const {
     Vec3f t1 = (size - ray.o) / ray.d;
     Vec3f t2 = (-1.0 * size - ray.o) / ray.d;

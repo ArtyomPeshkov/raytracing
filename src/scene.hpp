@@ -16,6 +16,7 @@ public:
     Color bgColor;
     
     int rayDepth;
+    int samples;
     Color ambient;
     Camera camera;
     
@@ -25,7 +26,6 @@ public:
 
     Scene() = default;
 
-    void render(std::ostream &out) const;
     Color raytrace(Ray ray, int bounceNum) const;
     Intersection getIntersection(Ray ray, double lower_bound) const;
 };

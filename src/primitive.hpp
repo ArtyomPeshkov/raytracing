@@ -25,6 +25,7 @@ public:
     Vec3f position{};
     Quaternion rotation = {0, 0, 0, 1};
     Color color;
+    Color emission;
 
     Material material = Material::DIFFUSE;
     double ior;
