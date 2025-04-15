@@ -1,4 +1,5 @@
 #include "parser.hpp"
+#include "distribution.hpp"
 
 #include <iostream>
 #include <fstream>
@@ -14,18 +15,14 @@ std::string Parser::parsePrimitive(std::ifstream &input, std::vector<Primitive*>
     std::istringstream iss(line);
     iss >> primitiveType;
 
+    double d_x, d_y, d_z;
+    iss >> d_x >> d_y >> d_z;
     if (primitiveType == "ELLIPSOID") {
-        double r_x, r_y, r_z;
-        iss >> r_x >> r_y >> r_z;
-        primitive = new Ellipsoid({r_x, r_y, r_z});
+        primitive = new Primitive({d_x, d_y, d_z}, PrimitiveType::ELLIPSOID);
     } else if (primitiveType == "PLANE") {
-        double n_x, n_y, n_z;
-        iss >> n_x >> n_y >> n_z;
-        primitive = new Plane({n_x, n_y, n_z});
+        primitive = new Primitive({d_x, d_y, d_z}, PrimitiveType::PLANE);
     } else if (primitiveType == "BOX") {
-        double e_x, e_y, e_z;
-        iss >> e_x >> e_y >> e_z;
-        primitive = new Box({e_x, e_y, e_z});
+        primitive = new Primitive({d_x, d_y, d_z}, PrimitiveType::BOX);
     } else {
         std::cout << "Unknown primitive: " << primitiveType << std::endl;
         return "";
@@ -68,44 +65,6 @@ std::string Parser::parsePrimitive(std::ifstream &input, std::vector<Primitive*>
     }
 
     primitives.push_back(primitive);
-    return "";
-}
-
-std::string Parser::parseLight(std::ifstream &input, std::vector<Light*> &lights) {
-    Light* res = new Light();
-    
-    res->type = LightType::Dot;
-
-    std::string line;
-    while (std::getline(input, line)) {
-        std::string property;
-        std::istringstream iss(line);
-        iss >> property;
-
-        if (property == "LIGHT_INTENSITY") {
-            double r, g, b;
-            iss >> r >> g >> b;
-            res->intensity = {r, g, b};
-        } else if (property == "LIGHT_POSITION") {
-            double x, y, z;
-            iss >> x >> y >> z;
-            res->position = {x, y, z};
-        } else if (property == "LIGHT_DIRECTION") {
-            double x, y, z;
-            iss >> x >> y >> z;
-            res->direction = {x, y, z};
-            res->type = LightType::Direction;
-        } else if (property == "LIGHT_ATTENUATION") {
-            double x, y, z;
-            iss >> x >> y >> z;
-            res->attenuation = {x, y, z};
-        } else {
-            lights.push_back(res);
-            return line;
-        }
-    }
-
-    lights.push_back(res);
     return "";
 }
 
@@ -163,13 +122,28 @@ Scene Parser::parseScene(const std::string &filename) {
             line = parsePrimitive(file, scene.primitives);
             continue;
         } else if (property == "NEW_LIGHT") {
-            line = parseLight(file, scene.lights);
+            // line = parseLight(file, scene.lights);
             continue;
         } else {
             std::cout << "Ignored line: " << line << std::endl;
         }
         line = "";
     }
+
+    std::vector<Distribution*> lights;
+    for (auto primitive: scene.primitives) {
+        if ((primitive->emission.red > 0 || primitive->emission.green > 0 || primitive->emission.blue > 0) && primitive->type != PrimitiveType::PLANE) {
+            lights.push_back(new Light(*primitive));
+        }
+    }
+
+    std::vector<Distribution*> mix;
+    mix.push_back(new Cosine());
+    if (!lights.empty()) {
+        auto light = new Mix(std::move(lights));
+        mix.push_back(light);
+    }
+    scene.distribution = new Mix(std::move(mix));
 
     return scene;
 }

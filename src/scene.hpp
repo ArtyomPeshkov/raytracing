@@ -8,7 +8,7 @@
 #include "color.hpp"
 #include "coordinate.hpp"
 #include "primitive.hpp"
-#include "light.hpp"
+#include "distribution.hpp"
 
 class Scene {
 public:
@@ -21,8 +21,8 @@ public:
     Camera camera;
     
     std::vector<Primitive*> primitives;
-    std::vector<Light*> lights;
 
+    Mix* distribution;
 
     Scene() = default;
 

@@ -10,6 +10,10 @@ enum class Material {
     DIFFUSE, METALLIC, DIELECTRIC
 };
 
+enum class PrimitiveType {
+    PLANE, BOX, ELLIPSOID
+};
+
 struct Intersection {
     Intersection(double t = 0, bool is_in = false, Vec3f normal = Vec3f(0, 0, 0), Color color = Color(0, 0, 0), int index = -1): t(t), normal(normal), color(color), is_in(is_in), primitiveIndex(index) {};
 
@@ -30,38 +34,15 @@ public:
     Material material = Material::DIFFUSE;
     double ior;
 
-    Primitive() = default;
+    Vec3f data;
+    PrimitiveType type;
+    
+    Primitive(Vec3f data, PrimitiveType type);
 
     std::optional <Intersection> intersection(const Ray &ray);
-    virtual std::optional <Intersection> intersect(const Ray &ray) const = 0;
+    std::optional <Intersection> intersect(const Ray &ray) const;
+    std::optional <Intersection> intersectEllipsoid(const Ray &ray) const;
+    std::optional <Intersection> intersectPlane(const Ray &ray) const;
+    std::optional <Intersection> intersectBox(const Ray &ray) const;
 };
 
-class Plane : public Primitive {
-public:
-    Vec3f normal{};
-
-    Plane(Vec3f n);
-    Plane() = default;
-
-    std::optional <Intersection> intersect(const Ray &ray) const override;
-};
-
-class Ellipsoid : public Primitive {
-public:
-    Vec3f radius{};
-
-    Ellipsoid(Vec3f r);
-    Ellipsoid() = default;
-
-    std::optional <Intersection> intersect(const Ray &ray) const override;
-};
-
-class Box : public Primitive {
-public:
-    Vec3f size{};
-
-    Box(Vec3f s);
-    Box() = default;
-
-    std::optional <Intersection> intersect(const Ray &ray) const override;
-};

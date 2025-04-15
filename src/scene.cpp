@@ -32,13 +32,17 @@ Color Scene::raytrace(Ray ray, int bounceNum) const {
     auto primitive = primitives[index];
 
     if (primitive->material == Material::DIFFUSE) {
-        Vec3f w = Vec3f(Random::normal_dist_0_1(Random::rnd), Random::normal_dist_0_1(Random::rnd), Random::normal_dist_0_1(Random::rnd)).normalized();
+        Vec3f p = ray.o + t * ray.d;
+        Vec3f w = distribution->sample(p + 0.0001 * normal, normal);
+
         if (w * normal < 0) {
-            w = -1.0 * w;
+            return primitive->emission;
         }
 
-        Ray new_ray = Ray(ray.o + t * ray.d + 0.0001 * w, w);
-        auto rec_color = 2 * (w * normal) * primitive->color * raytrace(new_ray, bounceNum - 1);
+        float pdf = distribution->pdf(p + 0.0001 * normal, normal, w);
+        Ray wR = Ray(p + 0.0001 * w, w);
+
+        auto rec_color = 1.0 / (acos(-1) * pdf) * (w * normal) * primitive->color * raytrace(wR, bounceNum - 1);
         return primitive->emission + rec_color;
     } else if (primitive->material == Material::METALLIC) {
         Vec3f reflectedDir = ray.d.normalized() - 2.0 * normal * ray.d.normalized() * normal;

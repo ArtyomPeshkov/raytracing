@@ -4,7 +4,7 @@
 #include <fstream>
 
 int main(int argc, const char *argv[]) {
-    std::cout << "HW3" << std::endl;
+    std::cout << "HW4" << std::endl;
     Scene scene = Parser::parseScene(argv[1]);
     Renderer::render(scene, argv[2]);
     return 0;
