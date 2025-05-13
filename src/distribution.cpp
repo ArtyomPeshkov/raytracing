@@ -47,18 +47,18 @@ Vec3f Light::boxSample(Vec3f x, Vec3f n) {
     double d_y = primitive.data.y;
     double d_z = primitive.data.z;
 
-    double wx = d_y * d_z;
-    double wy = d_x * d_z;
-    double wz = d_x * d_y;
+    double w_x = d_y * d_z;
+    double w_y = d_x * d_z;
+    double w_z = d_x * d_y;
 
     while (true) {
-        double u = Random::get_uniform() * (wx + wy + wz);
+        double u = Random::get_uniform() * (w_x + w_y + w_z);
         double sign = Random::get_uniform() > 0.5 ? 1 : -1;
         Vec3f point = Vec3f(Random::get_uniform_neg_pos() * d_x, Random::get_uniform_neg_pos() * d_y, Random::get_uniform_neg_pos() * d_z);
 
-        if (u < wx) {
+        if (u < w_x) {
             point.x = sign * d_x;
-        } else if (u < wx + wy) {
+        } else if (u < w_x + w_y) {
             point.y = sign * d_y;
         } else {
             point.z = sign * d_z;
@@ -118,13 +118,13 @@ double Light::ellipsoidgetPDF(Vec3f x, Vec3f d, Vec3f y, Vec3f yn) {
 
 Vec3f Mix::sample(Vec3f x, Vec3f n) {
     int distNum = Random::get_uniform() * components.size();
-    return components[distNum]->sample(x, n);
+    return components[distNum].sample(x, n);
 }
 
 double Mix::pdf(Vec3f x, Vec3f n, Vec3f d) {
     double ans = 0;
     for (auto& component : components) {
-        ans += component->pdf(x, n, d);
+        ans += component.pdf(x, n, d);
     }
     return ans / double(components.size());
 }

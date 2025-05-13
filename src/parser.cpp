@@ -140,10 +140,9 @@ Scene Parser::parseScene(const std::string &filename) {
     std::vector<Distribution*> mix;
     mix.push_back(new Cosine());
     if (!lights.empty()) {
-        auto light = new Mix(std::move(lights));
-        mix.push_back(light);
+        mix.push_back(new Mix(lights));
     }
-    scene.distribution = new Mix(std::move(mix));
+    scene.distribution = new Mix(mix);
 
     return scene;
 }

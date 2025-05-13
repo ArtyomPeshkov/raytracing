@@ -44,7 +44,7 @@ Color operator/(const Color& lhs, const Color& rhs) {
 
 std::ostream& operator<<(std::ostream& os, Color color) {
     Color toned = color.tonemap();
-    // TODO: move to function
+
     uint8_t r = static_cast<uint8_t>(std::round(Color::gamma_correction(Color::saturation(toned.red)) * 255.0));
     uint8_t g = static_cast<uint8_t>(std::round(Color::gamma_correction(Color::saturation(toned.green)) * 255.0));
     uint8_t b = static_cast<uint8_t>(std::round(Color::gamma_correction(Color::saturation(toned.blue)) * 255.0));

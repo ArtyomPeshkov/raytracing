@@ -39,7 +39,7 @@ class Mix : public Distribution {
 public:
     std::vector<Distribution*> components;
 
-    Mix(std::vector<Distribution*> &&components): components(std::move(components)) {}
+    Mix(std::vector<Distribution*> components): components(std::move(components)) {}
 
     Vec3f sample(Vec3f x, Vec3f n) override;
     double pdf(Vec3f x, Vec3f n, Vec3f d) override;
